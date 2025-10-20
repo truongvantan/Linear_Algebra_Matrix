@@ -117,6 +117,8 @@ Matrix findAdjointMatrix(const Matrix& inputMatrix)
 			subMatrix = findSubMatrix(inputMatrix, i, j);
 			sign = ((i + j) % 2 == 0) ? 1.0 : -1.0;
 			adjointMatrix[j][i] = sign * findDeterminant(subMatrix, sizeMatrix - 1);
+			
+			adjointMatrix[j][i] += 0.0; // remove -0.0 in result
 		}
 	}
 
@@ -131,7 +133,7 @@ Matrix findInverseMatrix(const Matrix& inputMatrix)
 
 	double determinant = findDeterminant(inputMatrix, sizeMatrix);
 
-	if (determinant == 0.0 || determinant <= 1e-9)
+	if (determinant == 0.0 || determinant == 1e-9)
 	{
 		throw std::runtime_error("Singluar Matrix. Cannot find inverse!!!");
 	}
@@ -143,6 +145,8 @@ Matrix findInverseMatrix(const Matrix& inputMatrix)
 		for (int j = 0; j < sizeMatrix; j++)
 		{
 			inverseMatrix[i][j] = adjointMatrix[i][j] / determinant;
+
+			inverseMatrix[i][j] += 0.0; // remove -0.0 in result
 		}
 	}
 
@@ -183,6 +187,12 @@ int main()
 		{1, 0, 0, 3},
 		{-3, 1, 5, 0},
 		{3, -1, -9, 4}
+	};
+
+	Matrix matrix6 = {
+		{1, 2, 3},
+		{0, 1, 4},
+		{0, 0, -1}
 	};
 
 	std::cout << "adjoint matrix: " << std::endl;
